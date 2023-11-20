@@ -1,0 +1,43 @@
+1. kafka
+    - 스칼라로 된 오픈소스 메시지 프로젝트
+    - 메시지를 전달할 때 사용하는 서버
+    - 일반적으로는 텍스트로 데이터를 전송하지만 json, xml, java 객체도 가능
+    - apache kafka, confluent kafka가 있다. (아파치 카프카에 부가적인 기능을 추가)
+
+ 2. kafka실행
+    1) zookeeper 실행
+    2) kafka 실행
+
+ 3. kafka용어
+    1) Broker : kafka서버, 메세지 중계, 3대의 브로커를 클러스터링하기를 권함
+
+    2) Producer : 메세지를 발행하는 서버나 어플리케이션(WAS, DBMS, Application),
+
+    3) Consumer : 저장된 메세지를 가져가는 서버나 어플리케이션 (엘라스틱서치, 하둡의 HDFS, DBMS, 어플리케이션...)
+
+    4) Topic : 프로듀서와 컨슈머가 카프카로 메시지를 보내고 메시지를 구분하기 위한 이름, 데이터를 저장할 수 있는 공간, 카프카에서는 토픽을 여러 개 생성(데이터베이스의 테이블이나 파일 시스템의 폴더와 유사한 성격)
+        - 토픽의 프로듀서가 데이터를 넣고 컨슈머가 데이터를 가지고 가서 작업
+        - 하나의 토픽은 여러 개의 파티션으로 구성될 수 있다.
+        - 토픽의 이름을 정의하는 경우 신중하게 패턴을 갖게 만들어주어야 한다.
+        - 공백, 점, 언더스코어 허용하지 않고 249글자까지
+        -
+    5) Partition : 토픽내부에 데이터를 저장하기 위한 공간.
+
+   4. spring에서 kafka사용하기
+   1) ProducerFactory -> Producer를 만드는 역할
+   2) ConsumerFactory -> Consumer를 만드는 역할
+   3) 메세지보내기 KakaTemplate 객체만들기
+                -> 설정정보(server.properties)를 정의한 객체
+                -> 정의한 설정정보를 이용해서 ProducerFactory(구현체 객체) 만들기
+                -> ProducerFactory를 이용해서 KafkaTemplate 객체를 만들기
+                -> KafkaTemplate 객체는 동기처리를 할 수 있으나 기본은 비동기처리
+                ---
+               ProducerConfig 객체의 상수를 이용해서 Map으로 구성
+
+
+       메세지 전송하기
+       -> KafkaTemplate의 send메소드 호출
+       메시지 전송 후 callback처리  (callback처리 : 메세지를 전송하고 결과를 가지고 되돌아온다.)
+       LisntenableFuture 객체
+
+       callback을 이용해서 메시지전송 성공시에 작업할 일과 실패시에 작업할 일을 구분해서 처리할 수 있다.
