@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="result"></div>
+
+    <script type="text/javascript">
+
+
+        const sse = new EventSource("http://192.168.0.5:8900/connect") // sse 구독신청을 위한 Path 지정한다.
+
+
+        // 서버가 보내는 메시지 구독
+        sse.addEventListener("valueChange",e=>{
+            const receivedData = e;
+
+            console.log("이벤트 받음 => ",receivedData);
+            console.log("이벤트 받음 => ",receivedData);
+            viewChange(receivedData.data)
+        })
+
+        function viewChange(val){
+            let result = document.querySelector("#result");
+            result.innerHTML = val;
+
+        }
+    </script>
+</body>
+</html>

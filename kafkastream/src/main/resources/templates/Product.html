@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="text" id="id">
+    <input type="button" id="notireq" value="입고알림" onclick="connect1()">
+    <input type="button" id="cancel" value="알림취소">
+
+<script>
+
+    function connect1(){
+
+    id = document.querySelector("#id");
+
+    const sse = new EventSource("http://192.168.0.5:8900/sse/connect/"+ id.value); // sse 구독신청을 위한 Path 지정한다.
+
+        sse.onopen=function (){
+            console.log("최초접속하기")
+        }
+        sse.onerror = function (error){
+            console.error("error :"+ error);
+            sse.close()
+        }
+        sse.addEventListener("prd", e => {
+        const receivedData = e;
+        console.log("이벤트 받음 => ",receivedData);
+        console.log("이벤트 받음 => ",receivedData);
+        if(receivedData.data=="create"){
+            myid = receivedData.lastEventId // 보통은 마지막으로 구독한 이벤트 번호를 준다.
+
+            alert(myid+"고객님께서 찾으시는 상품이 입고되었습니다.");
+            window.open("/popup.html","mywin","top=100,width=500,height=300");
+        }
+
+    })
+
+    }
+
+</script>
+</body>
+</html>
