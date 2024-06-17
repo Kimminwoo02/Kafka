@@ -1,0 +1,29 @@
+Resilience4j
+서버들끼리 통신시도 시 에러가 발생했을 때 에러를 우회할 수 있는 요소가 필요하다. 문제가 발생해도 그 서비스 자체에서는 문제가 없었던 것처럼 보여줄 수 있어야 된다는 뜻
+정상적으로 복구가 되었을 때 그 내용을 다시 연결해주는 것을 서킷 브레이커라고 한다. -> 장애 회피
+
+Open
+클라이언트의 요청을 우회시킨다. 에러 발생
+
+Closed
+정상적으로 다른 서비스를 사용할 수 있다는 뜻
+
+
+
+튜닝방법
+@Configuration
+public class Resilience4jConfiguration{
+    @Bean
+    public Customizer<Resilince4JCircuitBreakerFactory> globalCustomConfiguration(){
+
+    CircuitBreakerConfig circuitBreakerConfig =CircuitBreakerConfig.custom()
+    .failureRateThreshold(4) // CircuitBReaker를 오픈할지 말지 결정하는 Failure rate, default : 50
+    .waitDurationInOpenState(Duration.ofMillis(1000)) // 서킷 브레이커를 오픈한 상태를 유지하는 지속시간을 의미. 이후에는 half-open 상태
+    .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)// CircuitBreaker가 닫힐 때 결과를 기록하는 데 사용되는 슬라이딩 창의 유형
+    .slidingWindowSize(2) // 서킷 브레이커가 닫힐 때 호출 결과를 기록하는 데 사용되는 슬라이딩 창의 크기를 구성
+    .build();
+
+    }
+
+
+}
